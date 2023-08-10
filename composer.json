@@ -1,11 +1,14 @@
 {
-    "name": "laravelcollective/html",
+    "name": "rdx/laravelcollective-html",
     "description": "HTML and Form Builders for the Laravel Framework",
     "license": "MIT",
     "homepage": "https://laravelcollective.com",
     "support": {
         "issues": "https://github.com/LaravelCollective/html/issues",
         "source": "https://github.com/LaravelCollective/html"
+    },
+    "replace": {
+        "laravelcollective/html": "self.version"
     },
     "authors": [
         {
@@ -53,6 +56,5 @@
         }
     },
     "minimum-stability": "dev",
-    "abandoned": "spatie/laravel-html",
     "prefer-stable": true
 }
