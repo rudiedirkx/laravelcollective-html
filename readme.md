@@ -1,5 +1,3 @@
-![LaravelCollective HTML](LaravelCollectiveHTML-banner.png)
-
 # This is a `laravelcollective/html` drop-in replacement
 
 To use this package instead of `laravelcollective/html` as a perfect drop-in replacement, do this in your project:
