@@ -143,7 +143,7 @@ class HtmlBuilder
      * Generate a HTML link.
      *
      * @param string $url
-     * @param string $title
+     * @param null|false|string $title
      * @param array  $attributes
      * @param bool   $secure
      * @param bool   $escape
@@ -442,9 +442,9 @@ class HtmlBuilder
      * Build a single attribute element.
      *
      * @param string $key
-     * @param string $value
+     * @param mixed $value
      *
-     * @return string
+     * @return ?string
      */
     protected function attributeElement($key, $value)
     {
@@ -469,6 +469,8 @@ class HtmlBuilder
         if (! is_null($value)) {
             return $key . '="' . e($value, false) . '"';
         }
+
+        return null;
     }
 
     /**

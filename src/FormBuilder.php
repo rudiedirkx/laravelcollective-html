@@ -58,7 +58,7 @@ class FormBuilder
     /**
      * The session store implementation.
      *
-     * @var \Illuminate\Contracts\Session\Session
+     * @var ?\Illuminate\Contracts\Session\Session
      */
     protected $session;
 
@@ -99,13 +99,19 @@ class FormBuilder
      */
     protected $skipValueTypes = ['file', 'password', 'checkbox', 'radio'];
 
-
     /**
      * Input Type.
      *
-     * @var null
+     * @var string
      */
     protected $type = null;
+
+    /**
+     * Payload cache.
+     *
+     * @var array<string, Collection>
+     */
+    protected $payload = [];
 
     /**
      * Create a new form builder instance.
@@ -276,8 +282,8 @@ class FormBuilder
      * Create a form input field.
      *
      * @param  string $type
-     * @param  string $name
-     * @param  string $value
+     * @param  ?string $name
+     * @param  ?string $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -410,7 +416,7 @@ class FormBuilder
      * Create a number input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  int|float|string $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -424,7 +430,7 @@ class FormBuilder
      * Create a date input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -442,7 +448,7 @@ class FormBuilder
      * Create a datetime input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -460,7 +466,7 @@ class FormBuilder
      * Create a datetime-local input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -478,7 +484,7 @@ class FormBuilder
      * Create a time input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -510,7 +516,7 @@ class FormBuilder
      * Create a week input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -698,7 +704,7 @@ class FormBuilder
      *
      * @return mixed
      */
-    public function selectYear()
+    public function selectYear($name, $begin, $end, $selected = null, $options = [])
     {
         return call_user_func_array([$this, 'selectRange'], func_get_args());
     }
@@ -729,7 +735,7 @@ class FormBuilder
     /**
      * Get the select option for the given value.
      *
-     * @param  string $display
+     * @param  string|array $display
      * @param  string $value
      * @param  string $selected
      * @param  array  $attributes
@@ -776,9 +782,9 @@ class FormBuilder
     /**
      * Create a select element option.
      *
-     * @param  string $display
-     * @param  string $value
-     * @param  string $selected
+     * @param  null|string $display
+     * @param  null|string $value
+     * @param  null|scalar|array|Collection $selected
      * @param  array  $attributes
      *
      * @return \Illuminate\Support\HtmlString
@@ -820,8 +826,8 @@ class FormBuilder
     /**
      * Determine if the value is selected.
      *
-     * @param  string $value
-     * @param  string $selected
+     * @param  null|int|float|string $value
+     * @param  null|scalar|array|Collection $selected
      *
      * @return null|string
      */
@@ -833,7 +839,7 @@ class FormBuilder
             return $selected->contains($value) ? 'selected' : null;
         }
         if (is_int($value) && is_bool($selected)) {
-            return (bool)$value === $selected;
+            return (bool)$value === $selected ? 'selected' : null;
         }
         return ((string) $value === (string) $selected) ? 'selected' : null;
     }
@@ -925,7 +931,7 @@ class FormBuilder
      *
      * @param  string $name
      * @param  mixed  $value
-     * @param  bool   $checked
+     * @param  scalar $checked
      *
      * @return bool
      */
@@ -1031,7 +1037,7 @@ class FormBuilder
      * Create a month input field.
      *
      * @param  string $name
-     * @param  string $value
+     * @param  string|DateTime $value
      * @param  array  $options
      *
      * @return \Illuminate\Support\HtmlString
@@ -1265,7 +1271,7 @@ class FormBuilder
      * @param  string $name
      * @param  array  $attributes
      *
-     * @return string
+     * @return ?string
      */
     public function getIdAttribute($name, $attributes)
     {
@@ -1276,13 +1282,15 @@ class FormBuilder
         if (in_array($name, $this->labels)) {
             return $name;
         }
+
+        return null;
     }
 
     /**
      * Get the value that should be assigned to the field.
      *
-     * @param  string $name
-     * @param  string $value
+     * @param  ?string $name
+     * @param  ?string $value
      *
      * @return mixed
      */

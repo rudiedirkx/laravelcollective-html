@@ -12,8 +12,8 @@ jobs:
         actions:
           - name: phpunit
             run: ./vendor/bin/phpunit --no-progress --display-deprecations --display-phpunit-deprecations
-          # - name: phpstan
-          #   run: ./vendor/bin/phpstan analyze --no-progress
+          - name: phpstan
+            run: ./vendor/bin/phpstan analyze --no-progress
     name: ${{ matrix.actions.name }}
     steps:
       - uses: shivammathur/setup-php@v2
