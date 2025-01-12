@@ -829,7 +829,7 @@ class FormBuilder
      * @param  null|int|float|string $value
      * @param  null|scalar|array|Collection $selected
      *
-     * @return null|string
+     * @return null|bool|string
      */
     protected function getSelectedValue($value, $selected)
     {
@@ -839,7 +839,7 @@ class FormBuilder
             return $selected->contains($value) ? 'selected' : null;
         }
         if (is_int($value) && is_bool($selected)) {
-            return (bool)$value === $selected ? 'selected' : null;
+            return (bool)$value === $selected;
         }
         return ((string) $value === (string) $selected) ? 'selected' : null;
     }
