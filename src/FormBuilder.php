@@ -116,7 +116,7 @@ class FormBuilder
      * @param  string                                     $csrfToken
      * @param  Request                                    $request
      */
-    public function __construct(HtmlBuilder $html, UrlGenerator $url, Factory $view, $csrfToken, Request $request = null)
+    public function __construct(HtmlBuilder $html, UrlGenerator $url, Factory $view, $csrfToken, ?Request $request = null)
     {
         $this->url = $url;
         $this->html = $html;
@@ -709,16 +709,18 @@ class FormBuilder
      * @param  string $name
      * @param  string $selected
      * @param  array  $options
-     * @param  string $format
+     * @param  string $format  According to date(), not strftime()
      *
      * @return \Illuminate\Support\HtmlString
      */
-    public function selectMonth($name, $selected = null, $options = [], $format = '%B')
+    public function selectMonth($name, $selected = null, $options = [], $format = 'F')
     {
-        $months = [];
+        $formatter = str_contains($format, '%') ? 'strftime' : 'date';
 
+        $months = [];
         foreach (range(1, 12) as $month) {
-            $months[$month] = strftime($format, mktime(0, 0, 0, $month, 1));
+            $utc = mktime(0, 0, 0, $month, 1);
+            $months[$month] = $formatter($format, $utc);
         }
 
         return $this->select($name, $months, $selected, $options);
