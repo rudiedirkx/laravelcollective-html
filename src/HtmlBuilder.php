@@ -44,13 +44,13 @@ class HtmlBuilder
     /**
      * Convert an HTML string to entities.
      *
-     * @param string $value
+     * @param mixed $value
      *
      * @return string
      */
     public function entities($value)
     {
-        return htmlentities($value, ENT_QUOTES, 'UTF-8', false);
+        return e($value);
     }
 
     /**
