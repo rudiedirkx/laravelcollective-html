@@ -2,6 +2,7 @@ name: Tests
 
 on:
   - push
+  - pull_request
 
 jobs:
   phpstan:
@@ -16,9 +17,9 @@ jobs:
             run: ./vendor/bin/phpstan analyze --no-progress
     name: ${{ matrix.actions.name }}
     steps:
+      - uses: actions/checkout@v4
       - uses: shivammathur/setup-php@v2
         with:
           php-version: "8.3"
-      - uses: actions/checkout@v4
       - uses: ramsey/composer-install@v3
       - run: ${{ matrix.actions.run }}
